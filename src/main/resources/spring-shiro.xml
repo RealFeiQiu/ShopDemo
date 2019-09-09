@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!--配置securityManager-->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 登录url,如果没有登录，跳到该url;默认为根目录下的login.jsp -->
+        <property name="loginUrl" value="/user/index"/>
+        <!-- 认证成功后跳转的url,默认认证成功后跳转上一个url-->
+        <property name="successUrl" value="/user/index2" />
+        <!-- 用户没有权限访问资源时跳转的url -->
+        <property name="unauthorizedUrl" value="/refuse"/>
+        <!-- 配置shiro的过滤器链 -->
+        <property name="filterChainDefinitions" >
+            <value>
+                /user/index=anon
+                /toLogin=anon
+                /user/login=authc
+                /logout=logout
+                /jquery-easyui-1.7.0/**=anon
+                /page/**=anon
+                /**=authc
+            </value>
+        </property>
+    </bean>
+    <!-- 配置securityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="userRealm"/>
+    </bean>
+    <bean id="userRealm" class="com.niqi.realm.UserRealm"/>
+</beans>
